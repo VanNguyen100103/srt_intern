@@ -1,0 +1,141 @@
+# 📝 Todo List — Ứng dụng Quản lý công việc
+
+Bài test Intern Developer — SRT GROUP.
+
+Ứng dụng web quản lý công việc (Todo List) xây dựng bằng **Java Spring Boot**, giao diện **HTML/CSS/JavaScript** thuần, lưu trữ bằng **H2 Database**.
+
+## ✨ Tính năng
+
+- ✅ Hiển thị danh sách công việc
+- ✅ Thêm công việc mới
+- ✅ Chỉnh sửa công việc
+- ✅ Xóa công việc (có xác nhận)
+- ✅ Đánh dấu hoàn thành / chưa hoàn thành
+- ✅ Tìm kiếm theo tiêu đề hoặc mô tả
+- ✅ Lọc theo trạng thái (Tất cả / Đang làm / Hoàn thành)
+- ✅ Phân trang và sắp xếp (theo ngày tạo, tiêu đề)
+- ✅ Kiểm tra dữ liệu không hợp lệ (validation cả client và server)
+- ✅ Giao diện responsive (hỗ trợ mobile)
+- ✅ Unit Test (Service + Controller)
+- ✅ Docker
+
+## 🛠 Công nghệ sử dụng
+
+| Thành phần | Công nghệ |
+|---|---|
+| Backend | Java 21+, Spring Boot 4, Spring Data JPA, Bean Validation |
+| Database | H2 (file-based, tự tạo khi chạy) |
+| Frontend | HTML, CSS, JavaScript (Fetch API) |
+| Build | Maven (đã kèm Maven Wrapper, không cần cài Maven) |
+| Test | JUnit 5, Mockito, MockMvc |
+
+## 🚀 Cách chạy dự án
+
+### Yêu cầu
+
+- **JDK 21 trở lên** ([tải tại đây](https://adoptium.net/))
+- Không cần cài Maven (dự án đã kèm Maven Wrapper)
+
+### Chạy trực tiếp
+
+```bash
+# Windows
+mvnw.cmd spring-boot:run
+
+# macOS / Linux
+./mvnw spring-boot:run
+```
+
+Sau đó mở trình duyệt tại: **http://localhost:8080**
+
+> Lần chạy đầu tiên sẽ hơi lâu do Maven Wrapper tự tải Maven và các thư viện.
+
+### Chạy bằng Docker
+
+```bash
+docker build -t todo-list .
+docker run -p 8080:8080 todo-list
+```
+
+### Chạy Unit Test
+
+```bash
+# Windows
+mvnw.cmd test
+
+# macOS / Linux
+./mvnw test
+```
+
+## 📡 REST API
+
+| Method | Endpoint | Mô tả |
+|---|---|---|
+| GET | `/api/tasks` | Danh sách công việc (hỗ trợ `keyword`, `completed`, `page`, `size`, `sortBy`, `direction`) |
+| GET | `/api/tasks/{id}` | Chi tiết một công việc |
+| POST | `/api/tasks` | Thêm công việc mới |
+| PUT | `/api/tasks/{id}` | Chỉnh sửa công việc |
+| PATCH | `/api/tasks/{id}/toggle` | Đảo trạng thái hoàn thành |
+| DELETE | `/api/tasks/{id}` | Xóa công việc |
+
+**Ví dụ:** `GET /api/tasks?keyword=báo cáo&completed=false&page=0&size=5&sortBy=createdAt&direction=desc`
+
+Body cho POST/PUT:
+
+```json
+{
+  "title": "Hoàn thành báo cáo tuần",
+  "description": "Nộp trước 17h thứ 6"
+}
+```
+
+## 🗂 Cấu trúc dự án
+
+```
+src/main/java/com/srtgroup/todolist/
+├── controller/   # Tầng nhận request, trả response (REST API)
+│   └── TaskController.java
+├── service/      # Tầng xử lý nghiệp vụ
+│   └── TaskService.java
+├── repository/   # Tầng truy cập dữ liệu (Spring Data JPA)
+│   └── TaskRepository.java
+├── model/        # Entity ánh xạ bảng database
+│   └── Task.java
+├── dto/          # Đối tượng truyền dữ liệu vào/ra API
+│   ├── TaskRequest.java
+│   ├── TaskResponse.java
+│   └── PageResponse.java
+└── exception/    # Xử lý lỗi tập trung
+    ├── TaskNotFoundException.java
+    └── GlobalExceptionHandler.java
+
+src/main/resources/static/   # Giao diện web (HTML/CSS/JS)
+src/test/                    # Unit test
+```
+
+## 🛡 Xử lý dữ liệu không hợp lệ
+
+- **Tiêu đề trống hoặc chỉ có khoảng trắng** → 400, thông báo "Tiêu đề không được để trống"
+- **Tiêu đề quá 255 ký tự / mô tả quá 2000 ký tự** → 400 kèm thông báo cụ thể từng trường
+- **Id không tồn tại** (xem/sửa/xóa/toggle) → 404
+- **Id sai kiểu** (ví dụ `/api/tasks/abc`) → 400
+- **Tham số phân trang bất hợp lệ** (page âm, size quá lớn, trường sắp xếp không tồn tại) → tự chuẩn hóa về giá trị an toàn
+- **Lỗi không lường trước** → 500 với thông báo chung, không lộ chi tiết nội bộ
+
+Mọi lỗi trả về cùng một định dạng JSON thống nhất:
+
+```json
+{
+  "timestamp": "2026-07-05T10:00:00",
+  "status": 400,
+  "message": "Dữ liệu không hợp lệ",
+  "errors": { "title": "Tiêu đề không được để trống" }
+}
+```
+
+## 💾 Database
+
+- H2 chạy ở chế độ file (`./data/tododb`), dữ liệu **được giữ lại** sau khi tắt ứng dụng.
+- Xem trực tiếp database tại: http://localhost:8080/h2-console
+  - JDBC URL: `jdbc:h2:file:./data/tododb`
+  - User: `sa`, Password: *(để trống)*
