@@ -1,6 +1,8 @@
 # Supabase goi Free se tam dung (pause) project sau ~7 ngay khong co hoat dong.
 # Workflow nay tu dong goi API moi ngay de giu project luon song.
-# Yeu cau: tao secret SUPABASE_ANON_KEY trong Settings > Secrets and variables > Actions
+# Yeu cau 2 secret trong Settings > Secrets and variables > Actions:
+#   SUPABASE_URL      vd: https://<project-ref>.supabase.co
+#   SUPABASE_ANON_KEY anon key cua project
 name: Keep Supabase alive
 
 on:
@@ -14,10 +16,11 @@ jobs:
     steps:
       - name: Ping Supabase REST API
         env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
           curl -sf -o /dev/null \
-            "https://mtznaxaggqrghmabtpjp.supabase.co/rest/v1/tasks?select=id&limit=1" \
+            "$SUPABASE_URL/rest/v1/tasks?select=id&limit=1" \
             -H "apikey: $SUPABASE_ANON_KEY" \
             -H "Authorization: Bearer $SUPABASE_ANON_KEY"
           echo "Supabase da duoc ping thanh cong"

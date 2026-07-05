@@ -50,11 +50,19 @@ cd ..
 
 ### Bước 2 — Chạy backend
 
-Đặt mật khẩu database qua biến môi trường rồi chạy:
+Ứng dụng đọc toàn bộ thông tin kết nối database từ **biến môi trường** (không hardcode trong code):
+
+| Biến | Ý nghĩa | Ví dụ |
+|---|---|---|
+| `SUPABASE_DB_URL` | JDBC URL tới PostgreSQL | `jdbc:postgresql://aws-1-ap-southeast-2.pooler.supabase.com:5432/postgres` |
+| `SUPABASE_DB_USER` | Username database | `postgres.<project-ref>` |
+| `SUPABASE_DB_PASSWORD` | Mật khẩu database | *(mật khẩu bạn đặt trên Supabase)* |
 
 ```powershell
 # Windows (PowerShell)
 cd backend
+$env:SUPABASE_DB_URL = "jdbc:postgresql://<host>:5432/postgres"
+$env:SUPABASE_DB_USER = "postgres.<project-ref>"
 $env:SUPABASE_DB_PASSWORD = "mat-khau-database"
 .\mvnw.cmd spring-boot:run
 ```
@@ -62,11 +70,13 @@ $env:SUPABASE_DB_PASSWORD = "mat-khau-database"
 ```bash
 # macOS / Linux
 cd backend
+export SUPABASE_DB_URL="jdbc:postgresql://<host>:5432/postgres"
+export SUPABASE_DB_USER="postgres.<project-ref>"
 export SUPABASE_DB_PASSWORD="mat-khau-database"
 ./mvnw spring-boot:run
 ```
 
-> Mật khẩu không lưu trong mã nguồn để tránh lộ thông tin khi đưa code lên GitHub.
+> Mẹo: tạo file `backend/run.bat` chứa sẵn các biến trên để chạy 1 lệnh (file này đã nằm trong `.gitignore`, không bị đẩy lên GitHub).
 
 ### Chế độ phát triển frontend (tùy chọn)
 
@@ -86,8 +96,14 @@ Sau đó mở trình duyệt tại: **http://localhost:8080**
 
 ```bash
 docker build -t todo-list .
-docker run -p 8080:8080 -e SUPABASE_DB_PASSWORD="mat-khau-database" todo-list
+docker run -p 8080:8080 \
+  -e SUPABASE_DB_URL="jdbc:postgresql://<host>:5432/postgres" \
+  -e SUPABASE_DB_USER="postgres.<project-ref>" \
+  -e SUPABASE_DB_PASSWORD="mat-khau-database" \
+  todo-list
 ```
+
+Khi deploy lên **Render** (hoặc nền tảng tương tự): tạo Web Service từ repo (tự nhận Dockerfile) và điền 3 biến môi trường trên vào mục Environment Variables.
 
 ### Chạy Unit Test
 
