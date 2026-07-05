@@ -1,6 +1,6 @@
 HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
@@ -33,7 +33,7 @@ build/
 .vscode/
 
 ### Frontend build output (sinh tu "npm run build" trong frontend/) ###
-src/main/resources/static/
+backend/src/main/resources/static/
 
 ### Node ###
 frontend/node_modules/

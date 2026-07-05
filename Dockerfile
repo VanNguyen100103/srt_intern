@@ -12,11 +12,11 @@ FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 
 # Tải dependency trước để tận dụng Docker layer cache
-COPY .mvn/ .mvn/
-COPY mvnw pom.xml ./
+COPY backend/.mvn/ .mvn/
+COPY backend/mvnw backend/pom.xml ./
 RUN chmod +x mvnw && ./mvnw dependency:go-offline -q
 
-COPY src ./src
+COPY backend/src ./src
 # Nhung giao dien React da build vao static cua Spring Boot
 COPY --from=frontend /app/frontend/dist ./src/main/resources/static
 RUN ./mvnw package -DskipTests -q

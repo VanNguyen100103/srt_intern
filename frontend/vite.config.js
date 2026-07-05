@@ -13,7 +13,7 @@ export default defineConfig({
   build: {
     // Build xong, file tinh duoc dat vao thu muc static cua Spring Boot
     // => backend phuc vu luon giao dien, chi can chay 1 server
-    outDir: '../src/main/resources/static',
+    outDir: '../backend/src/main/resources/static',
     emptyOutDir: true,
   },
 })

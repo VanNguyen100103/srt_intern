@@ -46,7 +46,7 @@ npm run build
 cd ..
 ```
 
-> Kết quả build được đưa thẳng vào `src/main/resources/static` — Spring Boot phục vụ luôn giao diện, chỉ cần chạy 1 server.
+> Kết quả build được đưa thẳng vào `backend/src/main/resources/static` — Spring Boot phục vụ luôn giao diện, chỉ cần chạy 1 server.
 
 ### Bước 2 — Chạy backend
 
@@ -54,12 +54,14 @@ cd ..
 
 ```powershell
 # Windows (PowerShell)
+cd backend
 $env:SUPABASE_DB_PASSWORD = "mat-khau-database"
 .\mvnw.cmd spring-boot:run
 ```
 
 ```bash
 # macOS / Linux
+cd backend
 export SUPABASE_DB_PASSWORD="mat-khau-database"
 ./mvnw spring-boot:run
 ```
@@ -90,6 +92,8 @@ docker run -p 8080:8080 -e SUPABASE_DB_PASSWORD="mat-khau-database" todo-list
 ### Chạy Unit Test
 
 ```bash
+cd backend
+
 # Windows
 mvnw.cmd test
 
@@ -122,29 +126,29 @@ Body cho POST/PUT:
 ## 🗂 Cấu trúc dự án
 
 ```
-src/main/java/com/srtgroup/todolist/
-├── controller/   # Tầng nhận request, trả response (REST API)
-│   └── TaskController.java
-├── service/      # Tầng xử lý nghiệp vụ
-│   └── TaskService.java
-├── repository/   # Tầng truy cập dữ liệu (Spring Data JPA)
-│   └── TaskRepository.java
-├── model/        # Entity ánh xạ bảng database
-│   └── Task.java
-├── dto/          # Đối tượng truyền dữ liệu vào/ra API
-│   ├── TaskRequest.java
-│   ├── TaskResponse.java
-│   └── PageResponse.java
-└── exception/    # Xử lý lỗi tập trung
-    ├── TaskNotFoundException.java
-    └── GlobalExceptionHandler.java
+backend/                     # RESTful API — Java Spring Boot
+└── src/main/java/com/srtgroup/todolist/
+    ├── controller/   # Tầng nhận request, trả response (REST API)
+    │   └── TaskController.java
+    ├── service/      # Tầng xử lý nghiệp vụ
+    │   └── TaskService.java
+    ├── repository/   # Tầng truy cập dữ liệu (Spring Data JPA)
+    │   └── TaskRepository.java
+    ├── model/        # Entity ánh xạ bảng database
+    │   └── Task.java
+    ├── dto/          # Đối tượng truyền dữ liệu vào/ra API
+    │   ├── TaskRequest.java
+    │   ├── TaskResponse.java
+    │   └── PageResponse.java
+    └── exception/    # Xử lý lỗi tập trung
+        ├── TaskNotFoundException.java
+        └── GlobalExceptionHandler.java
 
-frontend/src/                # Giao diện React (Vite)
-├── api.js                   # Lớp gọi REST API
-├── App.jsx                  # Component gốc, quản lý state
-└── components/              # TaskForm, TaskList, TaskItem, Toolbar, Pagination, Toast
-
-src/test/                    # Unit test backend
+frontend/                    # Giao diện React (Vite)
+└── src/
+    ├── api.js               # Lớp gọi REST API
+    ├── App.jsx              # Component gốc, quản lý state
+    └── components/          # TaskForm, TaskList, TaskItem, Toolbar, Pagination, Toast
 ```
 
 ## 🛡 Xử lý dữ liệu không hợp lệ
