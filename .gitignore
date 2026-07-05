@@ -37,3 +37,6 @@ backend/src/main/resources/static/
 
 ### Node ###
 frontend/node_modules/
+
+### Script chay local co chua mat khau — khong commit ###
+backend/run.bat
