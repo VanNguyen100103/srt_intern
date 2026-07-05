@@ -24,10 +24,10 @@ Bài test Intern Developer — SRT GROUP.
 | Thành phần | Công nghệ |
 |---|---|
 | Backend | Java 21+, Spring Boot 4, Spring Data JPA, Bean Validation |
-| Database | H2 (file-based, tự tạo khi chạy) |
+| Database | PostgreSQL (Supabase cloud) |
 | Frontend | HTML, CSS, JavaScript (Fetch API) |
 | Build | Maven (đã kèm Maven Wrapper, không cần cài Maven) |
-| Test | JUnit 5, Mockito, MockMvc |
+| Test | JUnit 5, Mockito, MockMvc (mock repository — không cần database) |
 
 ## 🚀 Cách chạy dự án
 
@@ -38,13 +38,21 @@ Bài test Intern Developer — SRT GROUP.
 
 ### Chạy trực tiếp
 
-```bash
-# Windows
-mvnw.cmd spring-boot:run
+Đặt mật khẩu database qua biến môi trường rồi chạy:
 
+```powershell
+# Windows (PowerShell)
+$env:SUPABASE_DB_PASSWORD = "mat-khau-database"
+.\mvnw.cmd spring-boot:run
+```
+
+```bash
 # macOS / Linux
+export SUPABASE_DB_PASSWORD="mat-khau-database"
 ./mvnw spring-boot:run
 ```
+
+> Mật khẩu không lưu trong mã nguồn để tránh lộ thông tin khi đưa code lên GitHub.
 
 Sau đó mở trình duyệt tại: **http://localhost:8080**
 
@@ -54,7 +62,7 @@ Sau đó mở trình duyệt tại: **http://localhost:8080**
 
 ```bash
 docker build -t todo-list .
-docker run -p 8080:8080 todo-list
+docker run -p 8080:8080 -e SUPABASE_DB_PASSWORD="mat-khau-database" todo-list
 ```
 
 ### Chạy Unit Test
@@ -135,7 +143,6 @@ Mọi lỗi trả về cùng một định dạng JSON thống nhất:
 
 ## 💾 Database
 
-- H2 chạy ở chế độ file (`./data/tododb`), dữ liệu **được giữ lại** sau khi tắt ứng dụng.
-- Xem trực tiếp database tại: http://localhost:8080/h2-console
-  - JDBC URL: `jdbc:h2:file:./data/tododb;AUTO_SERVER=TRUE`
-  - User: `sa`, Password: *(để trống)*
+- PostgreSQL trên **Supabase** (cloud) — dữ liệu lưu tập trung, không mất khi tắt ứng dụng.
+- Kết nối qua Session Pooler (tương thích IPv4), bảng `tasks` tự tạo khi chạy lần đầu (`ddl-auto=update`).
+- Xem dữ liệu trực tiếp: Supabase Dashboard → **Table Editor** → bảng `tasks`.
