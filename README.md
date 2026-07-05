@@ -137,5 +137,5 @@ Mọi lỗi trả về cùng một định dạng JSON thống nhất:
 
 - H2 chạy ở chế độ file (`./data/tododb`), dữ liệu **được giữ lại** sau khi tắt ứng dụng.
 - Xem trực tiếp database tại: http://localhost:8080/h2-console
-  - JDBC URL: `jdbc:h2:file:./data/tododb`
+  - JDBC URL: `jdbc:h2:file:./data/tododb;AUTO_SERVER=TRUE`
   - User: `sa`, Password: *(để trống)*
