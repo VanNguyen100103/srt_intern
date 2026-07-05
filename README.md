@@ -2,7 +2,7 @@
 
 Bài test Intern Developer — SRT GROUP.
 
-Ứng dụng web quản lý công việc (Todo List) xây dựng bằng **Java Spring Boot**, giao diện **HTML/CSS/JavaScript** thuần, lưu trữ bằng **H2 Database**.
+Ứng dụng web quản lý công việc (Todo List): backend **RESTful API bằng Java Spring Boot**, giao diện **React (Vite)**, database **PostgreSQL trên Supabase**.
 
 ## ✨ Tính năng
 
@@ -23,10 +23,10 @@ Bài test Intern Developer — SRT GROUP.
 
 | Thành phần | Công nghệ |
 |---|---|
-| Backend | Java 21+, Spring Boot 4, Spring Data JPA, Bean Validation |
+| Backend | Java 21+, Spring Boot 4 (RESTful API), Spring Data JPA, Bean Validation |
 | Database | PostgreSQL (Supabase cloud) |
-| Frontend | HTML, CSS, JavaScript (Fetch API) |
-| Build | Maven (đã kèm Maven Wrapper, không cần cài Maven) |
+| Frontend | React 19 + Vite, Fetch API |
+| Build | Maven Wrapper (backend), npm (frontend) |
 | Test | JUnit 5, Mockito, MockMvc (mock repository — không cần database) |
 
 ## 🚀 Cách chạy dự án
@@ -34,9 +34,21 @@ Bài test Intern Developer — SRT GROUP.
 ### Yêu cầu
 
 - **JDK 21 trở lên** ([tải tại đây](https://adoptium.net/))
+- **Node.js 20 trở lên** (để build giao diện React)
 - Không cần cài Maven (dự án đã kèm Maven Wrapper)
 
-### Chạy trực tiếp
+### Bước 1 — Build giao diện React
+
+```bash
+cd frontend
+npm install
+npm run build
+cd ..
+```
+
+> Kết quả build được đưa thẳng vào `src/main/resources/static` — Spring Boot phục vụ luôn giao diện, chỉ cần chạy 1 server.
+
+### Bước 2 — Chạy backend
 
 Đặt mật khẩu database qua biến môi trường rồi chạy:
 
@@ -53,6 +65,16 @@ export SUPABASE_DB_PASSWORD="mat-khau-database"
 ```
 
 > Mật khẩu không lưu trong mã nguồn để tránh lộ thông tin khi đưa code lên GitHub.
+
+### Chế độ phát triển frontend (tùy chọn)
+
+Khi sửa giao diện, chạy thêm dev server của Vite (hot reload, tự chuyển tiếp `/api` sang backend):
+
+```bash
+cd frontend
+npm run dev
+# Mo http://localhost:5173
+```
 
 Sau đó mở trình duyệt tại: **http://localhost:8080**
 
@@ -117,8 +139,12 @@ src/main/java/com/srtgroup/todolist/
     ├── TaskNotFoundException.java
     └── GlobalExceptionHandler.java
 
-src/main/resources/static/   # Giao diện web (HTML/CSS/JS)
-src/test/                    # Unit test
+frontend/src/                # Giao diện React (Vite)
+├── api.js                   # Lớp gọi REST API
+├── App.jsx                  # Component gốc, quản lý state
+└── components/              # TaskForm, TaskList, TaskItem, Toolbar, Pagination, Toast
+
+src/test/                    # Unit test backend
 ```
 
 ## 🛡 Xử lý dữ liệu không hợp lệ

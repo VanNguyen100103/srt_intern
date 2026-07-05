@@ -32,5 +32,8 @@ build/
 ### VS Code ###
 .vscode/
 
-### H2 Database ###
-data/
+### Frontend build output (sinh tu "npm run build" trong frontend/) ###
+src/main/resources/static/
+
+### Node ###
+frontend/node_modules/
