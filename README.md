@@ -103,11 +103,18 @@ cd backend
 .\mvnw.cmd test "-Dtest=TaskServiceTest"      # 7 test tầng Service
 .\mvnw.cmd test "-Dtest=TaskControllerTest"   # 8 test tầng Controller (API)
 
-# Chạy đúng một test (dấu # giữa tên lớp và tên hàm)
+# Chạy đúng một test duy nhất (dấu # giữa tên lớp và tên hàm)
 .\mvnw.cmd test "-Dtest=TaskServiceTest#createTask_trimsInput"
+.\mvnw.cmd test "-Dtest=TaskControllerTest#createTask_blankTitle_returns400"
 
-# Chạy nhiều test theo mẫu tên (* là ký tự đại diện)
-.\mvnw.cmd test "-Dtest=Task*Test#delete*"
+# Chạy nhiều test cụ thể trong cùng một lớp (ngăn cách bằng dấu +)
+.\mvnw.cmd test "-Dtest=TaskServiceTest#createTask_trimsInput+toggleTask_flipsCompleted"
+
+# Chạy mọi test có tên khớp mẫu (* là ký tự đại diện)
+.\mvnw.cmd test "-Dtest=Task*Test#delete*"      # mọi test bắt đầu bằng "delete" trong cả 2 lớp
+
+# Chạy nhiều lớp cùng lúc (ngăn cách bằng dấu phẩy)
+.\mvnw.cmd test "-Dtest=TaskServiceTest,TaskControllerTest"
 ```
 
 Kết quả mong đợi ở cuối log:
