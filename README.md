@@ -4,6 +4,14 @@ Bài test Intern Developer — SRT GROUP.
 
 Ứng dụng web quản lý công việc (Todo List): backend **RESTful API bằng Java Spring Boot**, giao diện **React (Vite)**, database **PostgreSQL trên Supabase**.
 
+## 🌐 Demo online
+
+**👉 https://srt-intern.onrender.com**
+
+> Deploy trên gói Free của Render nên nếu lâu không có người truy cập, lần mở đầu tiên sẽ chờ **30–60 giây** để server khởi động lại — vui lòng đợi một chút.
+
+Link GitHub: https://github.com/VanNguyen100103/srt_intern
+
 ## ✨ Tính năng
 
 - ✅ Hiển thị danh sách công việc
