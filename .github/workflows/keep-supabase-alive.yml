@@ -1,5 +1,6 @@
 # Supabase goi Free se tam dung (pause) project sau ~7 ngay khong co hoat dong.
 # Workflow nay tu dong goi API moi ngay de giu project luon song.
+# Yeu cau: tao secret SUPABASE_ANON_KEY trong Settings > Secrets and variables > Actions
 name: Keep Supabase alive
 
 on:
@@ -12,10 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ping Supabase REST API
-        # anon key la key cong khai (van dung o phia trinh duyet), khong phai secret
+        env:
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
           curl -sf -o /dev/null \
             "https://mtznaxaggqrghmabtpjp.supabase.co/rest/v1/tasks?select=id&limit=1" \
-            -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10em5heGFnZ3FyZ2htYWJ0cGpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxOTczNjQsImV4cCI6MjA5ODc3MzM2NH0.EjIxaS-3vg-27stt39MWHkrbh0HW4IdVco_OGj7K8mI" \
-            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10em5heGFnZ3FyZ2htYWJ0cGpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxOTczNjQsImV4cCI6MjA5ODc3MzM2NH0.EjIxaS-3vg-27stt39MWHkrbh0HW4IdVco_OGj7K8mI"
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY"
           echo "Supabase da duoc ping thanh cong"
