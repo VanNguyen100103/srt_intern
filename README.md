@@ -117,12 +117,36 @@ Kết quả mong đợi ở cuối log:
 [INFO] BUILD SUCCESS
 ```
 
-**Danh sách test:**
+Project có **15 unit test** chia làm 2 lớp, mỗi lớp test một tầng riêng:
 
-| Lớp | Kiểm tra |
+#### 1. `TaskServiceTest` — test tầng nghiệp vụ (7 test)
+
+Dùng **Mockito** giả lập (`@Mock`) tầng `TaskRepository`, nên test chạy không cần database:
+
+| Test | Kiểm tra điều gì |
 |---|---|
-| `TaskServiceTest` (Mockito) | Trim dữ liệu khi tạo/sửa, mô tả rỗng thành null, toggle trạng thái, ném `TaskNotFoundException` khi id không tồn tại (get/delete) |
-| `TaskControllerTest` (MockMvc) | POST hợp lệ → 201; tiêu đề trống → 400 kèm lỗi từng trường; JSON hỏng → 400; id không tồn tại → 404; id sai kiểu → 400; toggle → 200; xóa → 204 |
+| `createTask_trimsInput` | Tạo task với tiêu đề `"  Học Spring Boot  "` → khoảng trắng thừa bị cắt trước khi lưu |
+| `createTask_blankDescriptionBecomesNull` | Mô tả chỉ toàn khoảng trắng → chuẩn hóa thành `null` |
+| `updateTask_updatesFields` | Sửa task → tiêu đề và mô tả mới được lưu đúng |
+| `getTask_notFound_throwsException` | Lấy task id không tồn tại → ném `TaskNotFoundException` |
+| `toggleTask_flipsCompleted` | Toggle task chưa hoàn thành → thành hoàn thành |
+| `deleteTask_existing_deletes` | Xóa task tồn tại → `repository.delete` được gọi đúng task đó |
+| `deleteTask_notFound_throwsException` | Xóa task không tồn tại → ném `TaskNotFoundException` |
+
+#### 2. `TaskControllerTest` — test tầng API (8 test)
+
+Dùng **`@WebMvcTest` + MockMvc**: giả lập HTTP request thật gửi vào controller (service bị mock bằng `@MockitoBean`), kiểm tra mã HTTP và JSON trả về:
+
+| Test | Request | Kỳ vọng |
+|---|---|---|
+| `createTask_valid_returns201` | POST dữ liệu hợp lệ | 201 + JSON task vừa tạo |
+| `createTask_blankTitle_returns400` | POST tiêu đề toàn khoảng trắng | 400 + `errors.title` |
+| `createTask_malformedJson_returns400` | POST body không phải JSON | 400 + thông báo rõ ràng |
+| `getTask_notFound_returns404` | GET id không tồn tại | 404 |
+| `getTask_invalidId_returns400` | GET `/api/tasks/abc` (id không phải số) | 400 |
+| `toggleTask_returnsUpdatedTask` | PATCH toggle | 200 + `completed: true` |
+| `deleteTask_returns204` | DELETE id tồn tại | 204 No Content |
+| `deleteTask_notFound_returns404` | DELETE id không tồn tại | 404 |
 
 > Test mock toàn bộ dependency (repository/service) nên chạy nhanh và **không cần database**.
 
