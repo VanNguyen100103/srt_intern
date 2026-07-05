@@ -91,15 +91,40 @@ docker run -p 8080:8080 -e SUPABASE_DB_PASSWORD="mat-khau-database" todo-list
 
 ### Chạy Unit Test
 
-```bash
+Tất cả lệnh chạy trong thư mục `backend`. Trên macOS/Linux thay `.\mvnw.cmd` bằng `./mvnw`.
+
+```powershell
 cd backend
 
-# Windows
-mvnw.cmd test
+# Chạy toàn bộ 15 test
+.\mvnw.cmd test
 
-# macOS / Linux
-./mvnw test
+# Chạy riêng một lớp test
+.\mvnw.cmd test "-Dtest=TaskServiceTest"      # 7 test tầng Service
+.\mvnw.cmd test "-Dtest=TaskControllerTest"   # 8 test tầng Controller (API)
+
+# Chạy đúng một test (dấu # giữa tên lớp và tên hàm)
+.\mvnw.cmd test "-Dtest=TaskServiceTest#createTask_trimsInput"
+
+# Chạy nhiều test theo mẫu tên (* là ký tự đại diện)
+.\mvnw.cmd test "-Dtest=Task*Test#delete*"
 ```
+
+Kết quả mong đợi ở cuối log:
+
+```
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+```
+
+**Danh sách test:**
+
+| Lớp | Kiểm tra |
+|---|---|
+| `TaskServiceTest` (Mockito) | Trim dữ liệu khi tạo/sửa, mô tả rỗng thành null, toggle trạng thái, ném `TaskNotFoundException` khi id không tồn tại (get/delete) |
+| `TaskControllerTest` (MockMvc) | POST hợp lệ → 201; tiêu đề trống → 400 kèm lỗi từng trường; JSON hỏng → 400; id không tồn tại → 404; id sai kiểu → 400; toggle → 200; xóa → 204 |
+
+> Test mock toàn bộ dependency (repository/service) nên chạy nhanh và **không cần database**.
 
 ## 📡 REST API
 
