@@ -12,7 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -39,7 +39,7 @@ class TaskControllerTest {
 
     private TaskResponse sampleTask() {
         return new TaskResponse(1L, "Học Spring Boot", "Ôn tập JPA", false,
-                LocalDateTime.now(), LocalDateTime.now());
+                Instant.now(), Instant.now());
     }
 
     @Test
@@ -97,7 +97,7 @@ class TaskControllerTest {
     @DisplayName("PATCH /api/tasks/{id}/toggle trả về công việc đã đổi trạng thái")
     void toggleTask_returnsUpdatedTask() throws Exception {
         TaskResponse toggled = new TaskResponse(1L, "Học Spring Boot", null, true,
-                LocalDateTime.now(), LocalDateTime.now());
+                Instant.now(), Instant.now());
         when(taskService.toggleTask(1L)).thenReturn(toggled);
 
         mockMvc.perform(patch("/api/tasks/1/toggle"))
