@@ -1,0 +1,21 @@
+# Supabase goi Free se tam dung (pause) project sau ~7 ngay khong co hoat dong.
+# Workflow nay tu dong goi API moi ngay de giu project luon song.
+name: Keep Supabase alive
+
+on:
+  schedule:
+    - cron: '0 1 * * *'   # 8h sang gio Viet Nam, moi ngay
+  workflow_dispatch:       # cho phep bam nut chay tay tren tab Actions
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API
+        # anon key la key cong khai (van dung o phia trinh duyet), khong phai secret
+        run: |
+          curl -sf -o /dev/null \
+            "https://mtznaxaggqrghmabtpjp.supabase.co/rest/v1/tasks?select=id&limit=1" \
+            -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10em5heGFnZ3FyZ2htYWJ0cGpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxOTczNjQsImV4cCI6MjA5ODc3MzM2NH0.EjIxaS-3vg-27stt39MWHkrbh0HW4IdVco_OGj7K8mI" \
+            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10em5heGFnZ3FyZ2htYWJ0cGpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxOTczNjQsImV4cCI6MjA5ODc3MzM2NH0.EjIxaS-3vg-27stt39MWHkrbh0HW4IdVco_OGj7K8mI"
+          echo "Supabase da duoc ping thanh cong"
